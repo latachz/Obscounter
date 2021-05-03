@@ -12,6 +12,8 @@ class TextContent:
         except:
             f = open(f"{os.environ['USERPROFILE']}\\counter_data.txt", "w")
             f.write(str(0))
+            f.close()
+            f = open(f"{os.environ['USERPROFILE']}\\counter_data.txt")
             self.counter = int(f.read())
 
     def update_text(self, counter_text, counter_value=0):
