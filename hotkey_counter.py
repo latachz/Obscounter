@@ -1,11 +1,18 @@
 import obspython as obs
+import os
 
 
 class TextContent:
     def __init__(self, source_name=None, text_string="This is default text"):
         self.source_name = source_name
         self.text_string = text_string
-        self.counter = 0
+        try:
+            f = open(f"{os.environ['USERPROFILE']}\\counter_data.txt")
+            self.counter = int(f.read())
+        except:
+            f = open(f"{os.environ['USERPROFILE']}\\counter_data.txt", "w")
+            f.write(str(0))
+            self.counter = int(f.read())
 
     def update_text(self, counter_text, counter_value=0):
         source = obs.obs_get_source_by_name(self.source_name)
@@ -17,6 +24,9 @@ class TextContent:
         if counter_value == 0:
             self.counter = 0
         self.text_string = f"{counter_text}{self.counter}"
+
+        f = open(f"{os.environ['USERPROFILE']}\\counter_data.txt", "w")
+        f.write(str(self.counter))
 
         obs.obs_data_set_string(settings, "text", self.text_string)
         obs.obs_source_update(source, settings)
@@ -119,11 +129,15 @@ def script_description():
 
 
 def script_update(settings):
-    hotkeys_counter_1.source_name = obs.obs_data_get_string(settings, "source1")
-    hotkeys_counter_1.counter_text = obs.obs_data_get_string(settings, "counter_text1")
+    hotkeys_counter_1.source_name = obs.obs_data_get_string(
+        settings, "source1")
+    hotkeys_counter_1.counter_text = obs.obs_data_get_string(
+        settings, "counter_text1")
 
-    hotkeys_counter_2.source_name = obs.obs_data_get_string(settings, "source2")
-    hotkeys_counter_2.counter_text = obs.obs_data_get_string(settings, "counter_text2")
+    hotkeys_counter_2.source_name = obs.obs_data_get_string(
+        settings, "source2")
+    hotkeys_counter_2.counter_text = obs.obs_data_get_string(
+        settings, "counter_text2")
 
 
 def script_properties():
